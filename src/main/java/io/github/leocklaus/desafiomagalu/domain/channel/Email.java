@@ -1,9 +1,12 @@
 package io.github.leocklaus.desafiomagalu.domain.channel;
 
 import io.github.leocklaus.desafiomagalu.domain.entity.Notification;
+import io.github.leocklaus.desafiomagalu.domain.service.MailService;
 import io.github.leocklaus.desafiomagalu.domain.service.NotificationService;
+import io.github.leocklaus.desafiomagalu.domain.service.SendgridMailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 
@@ -11,17 +14,21 @@ import org.springframework.stereotype.Component;
 public class Email implements Channel{
 
     private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
-    private final NotificationService notificationService;
+    @Qualifier("sendgrid")
+    private final MailService mailService;
 
-    public Email(NotificationService notificationService) {
-        this.notificationService = notificationService;
+    public Email(MailService mailService) {
+        this.mailService = mailService;
     }
 
 
     @Override
     public void send(Notification notification) {
-        log.info("Sending an email to: " + notification.getReceiver() +
-                " via notification: " + notification.getId());
-        this.notificationService.setNotificationAsSent(notification.getId());
+        mailService.send(
+                notification.getReceiver(),
+                "subject",
+                notification.getMessage(),
+                notification.getId()
+        );
     }
 }

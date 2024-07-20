@@ -21,7 +21,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final Map<NotificationType, Channel> notificationChannel = Map.of(
-            NotificationType.EMAIL, new Email(this),
+            NotificationType.EMAIL, new Email(new SendgridMailService(this)),
             NotificationType.SMS, new SMS(),
             NotificationType.PUSH, new Push(this),
             NotificationType.WHATSAPP, new Whatsapp()
