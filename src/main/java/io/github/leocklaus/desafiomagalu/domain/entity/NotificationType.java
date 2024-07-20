@@ -10,4 +10,5 @@ public enum NotificationType {
     NotificationType(String description) {
     }
 
+
 }
